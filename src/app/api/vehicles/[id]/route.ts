@@ -78,8 +78,8 @@ export async function PUT(
       }, { status: 404 });
     }
 
-    // For WARGA, check ownership
-    if (user.role === 'WARGA' && existingVehicle.houseId !== user.houseId) {
+    // For WARGA, check ownership by userId
+    if (user.role === 'WARGA' && existingVehicle.userId !== user.id) {
       return NextResponse.json({
         success: false,
         error: { code: 'FORBIDDEN', message: 'Tidak memiliki akses' }
@@ -139,10 +139,10 @@ export async function DELETE(
   try {
     const user = await getCurrentUser();
     
-    if (!user || user.role !== 'ADMIN') {
+    if (!user || (user.role !== 'ADMIN' && user.role !== 'WARGA')) {
       return NextResponse.json({
         success: false,
-        error: { code: 'FORBIDDEN', message: 'Hanya admin yang dapat menghapus kendaraan' }
+        error: { code: 'FORBIDDEN', message: 'Tidak memiliki akses' }
       }, { status: 403 });
     }
 
@@ -157,6 +157,14 @@ export async function DELETE(
         success: false,
         error: { code: 'NOT_FOUND', message: 'Kendaraan tidak ditemukan' }
       }, { status: 404 });
+    }
+
+    // For WARGA, check ownership by userId
+    if (user.role === 'WARGA' && vehicle.userId !== user.id) {
+      return NextResponse.json({
+        success: false,
+        error: { code: 'FORBIDDEN', message: 'Tidak memiliki akses' }
+      }, { status: 403 });
     }
 
     // Soft delete by setting status to INACTIVE

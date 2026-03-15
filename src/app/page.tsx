@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Car, Loader2, AlertCircle } from 'lucide-react';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -54,7 +55,7 @@ export default function LoginPage() {
       } else {
         setError(data.error?.message || 'Login gagal');
       }
-    } catch (err) {
+    } catch {
       setError('Terjadi kesalahan sistem. Silakan coba lagi.');
     } finally {
       setLoading(false);
@@ -69,9 +70,9 @@ export default function LoginPage() {
             <Car className="w-8 h-8 text-white" />
           </div>
           <div>
-            <CardTitle className="text-2xl font-bold">Sistem Parkir Perumahan</CardTitle>
+            <CardTitle className="text-2xl font-bold">SIPARKIR</CardTitle>
             <CardDescription className="mt-2">
-              Masuk ke sistem manajemen parkir
+              Sistem Informasi Manajemen Parkir Perumahan
             </CardDescription>
           </div>
         </CardHeader>
@@ -125,6 +126,21 @@ export default function LoginPage() {
               )}
             </Button>
           </form>
+          
+          <div className="mt-4 flex items-center justify-between text-sm">
+            <Link 
+              href="/auth/forgot-password" 
+              className="text-emerald-600 hover:underline"
+            >
+              Lupa Password?
+            </Link>
+            <Link 
+              href="/auth/register" 
+              className="text-emerald-600 hover:underline"
+            >
+              Daftar Akun
+            </Link>
+          </div>
           
           <div className="mt-6 pt-6 border-t text-center text-sm text-muted-foreground">
             <p className="font-medium mb-2">Demo Login:</p>

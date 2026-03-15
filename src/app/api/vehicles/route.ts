@@ -25,9 +25,9 @@ export async function GET(request: NextRequest) {
 
     const where: any = {};
 
-    // For WARGA role, only show their own vehicles
-    if (user.role === 'WARGA' && user.houseId) {
-      where.houseId = user.houseId;
+    // For WARGA role, only show their own vehicles (by userId)
+    if (user.role === 'WARGA') {
+      where.userId = user.id;
     }
 
     if (search) {
@@ -125,27 +125,27 @@ export async function POST(request: NextRequest) {
       }, { status: 409 });
     }
 
-    // Determine houseId
+    // Determine houseId for WARGA
     let targetHouseId = houseId;
     if (user.role === 'WARGA') {
-      if (!user.houseId) {
-        return NextResponse.json({
-          success: false,
-          error: { code: 'NO_HOUSE', message: 'Anda tidak terdaftar di rumah manapun' }
-        }, { status: 400 });
-      }
-      targetHouseId = user.houseId;
+      targetHouseId = user.houseId || null;
     }
 
-    // Check quota for WARGA vehicles
-    if (category === 'WARGA' && targetHouseId) {
-      const quota = await checkVehicleQuota(targetHouseId);
-      if (!quota.available) {
+    // Check quota for WARGA vehicles (based on userId)
+    if (user.role === 'WARGA' && category === 'WARGA') {
+      const userVehicleCount = await db.vehicle.count({
+        where: {
+          userId: user.id,
+          status: 'ACTIVE',
+        },
+      });
+      const maxVehicles = 2;
+      if (userVehicleCount >= maxVehicles) {
         return NextResponse.json({
           success: false,
           error: { 
             code: 'QUOTA_EXCEEDED', 
-            message: `Kuota kendaraan sudah penuh (${quota.current}/${quota.max})` 
+            message: `Kuota kendaraan sudah penuh (${userVehicleCount}/${maxVehicles})` 
           }
         }, { status: 400 });
       }
@@ -160,6 +160,7 @@ export async function POST(request: NextRequest) {
         category: category || 'WARGA',
         status: 'ACTIVE',
         houseId: targetHouseId,
+        userId: user.role === 'WARGA' ? user.id : null, // Link to user for WARGA
       },
       include: {
         house: true,

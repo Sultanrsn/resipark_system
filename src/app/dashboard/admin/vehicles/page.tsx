@@ -75,8 +75,8 @@ export default function VehiclesPage() {
   const [houses, setHouses] = useState<House[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -101,12 +101,8 @@ export default function VehiclesPage() {
       params.set('page', page.toString());
       params.set('limit', '10');
       if (search) params.set('search', search);
-      if (categoryFilter && categoryFilter !== "ALL") {
-        params.set('category', categoryFilter);
-      }     
-      if (statusFilter && statusFilter !== "ALL") {
-        params.set('status', statusFilter);
-      }
+      if (categoryFilter && categoryFilter !== 'all') params.set('category', categoryFilter);
+      if (statusFilter && statusFilter !== 'all') params.set('status', statusFilter);
 
       const response = await fetch(`/api/vehicles?${params}`);
       const data = await response.json();
@@ -362,7 +358,7 @@ export default function VehiclesPage() {
                 <SelectValue placeholder="Kategori" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">Semua</SelectItem>
+                <SelectItem value="all">Semua</SelectItem>
                 {Object.entries(VEHICLE_CATEGORY_LABELS).map(([key, value]) => (
                   <SelectItem key={key} value={key}>
                     {value}
@@ -375,7 +371,7 @@ export default function VehiclesPage() {
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ALL">Semua</SelectItem>
+                <SelectItem value="all">Semua</SelectItem>
                 <SelectItem value="ACTIVE">Aktif</SelectItem>
                 <SelectItem value="INACTIVE">Tidak Aktif</SelectItem>
                 <SelectItem value="BLACKLISTED">Blacklist</SelectItem>

@@ -133,9 +133,7 @@ export async function POST(request: NextRequest) {
 
     // Get available slot
     const slotId = await getAvailableSlot(targetAreaId);
-    let slotNumber: string | null | undefined = null;
-
-
+    let slotNumber = null;
 
     if (slotId) {
       const slot = await db.parkingSlot.findUnique({ where: { id: slotId } });

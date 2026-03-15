@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create violation if there's a fine
-    let violation: Awaited<ReturnType<typeof db.violation.create>> | null = null;
+    let violation = null;
     if (fineAmount > 0) {
       violation = await db.violation.create({
         data: {

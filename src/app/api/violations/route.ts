@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
     // Check auto-blacklist conditions
     const blacklistCheck = await checkAutoBlacklist(vehicle.id);
     
-    let autoBlacklist: any | null = null;
+    let autoBlacklist = null;
     if (blacklistCheck.shouldBlacklist) {
       const endDate = blacklistCheck.duration
         ? new Date(Date.now() + blacklistCheck.duration * 24 * 60 * 60 * 1000)

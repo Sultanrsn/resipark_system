@@ -316,7 +316,7 @@ async function main() {
   const vehicles = await Promise.all([
     prisma.vehicle.upsert({
       where: { platNumber: 'B 1234 ABC' },
-      update: {},
+      update: { userId: warga1.id }, // Update with userId
       create: {
         platNumber: 'B 1234 ABC',
         vehicleType: 'MOTOR',
@@ -325,11 +325,12 @@ async function main() {
         category: 'WARGA',
         status: 'ACTIVE',
         houseId: houses[0].id,
+        userId: warga1.id, // Link to user
       },
     }),
     prisma.vehicle.upsert({
       where: { platNumber: 'B 5678 DEF' },
-      update: {},
+      update: { userId: warga1.id }, // Update with userId
       create: {
         platNumber: 'B 5678 DEF',
         vehicleType: 'SEDAN',
@@ -338,11 +339,12 @@ async function main() {
         category: 'WARGA',
         status: 'ACTIVE',
         houseId: houses[0].id,
+        userId: warga1.id, // Link to user
       },
     }),
     prisma.vehicle.upsert({
       where: { platNumber: 'D 1111 GHI' },
-      update: {},
+      update: { userId: warga2.id }, // Update with userId
       create: {
         platNumber: 'D 1111 GHI',
         vehicleType: 'MOTOR',
@@ -351,11 +353,12 @@ async function main() {
         category: 'WARGA',
         status: 'ACTIVE',
         houseId: houses[1].id,
+        userId: warga2.id, // Link to user
       },
     }),
     prisma.vehicle.upsert({
       where: { platNumber: 'D 2222 JKL' },
-      update: {},
+      update: { userId: warga3.id }, // Update with userId
       create: {
         platNumber: 'D 2222 JKL',
         vehicleType: 'MINIBUS',
@@ -364,6 +367,7 @@ async function main() {
         category: 'WARGA',
         status: 'ACTIVE',
         houseId: houses[3].id,
+        userId: warga3.id, // Link to user
       },
     }),
     prisma.vehicle.upsert({
@@ -377,6 +381,7 @@ async function main() {
         category: 'SERVICE',
         status: 'ACTIVE',
         houseId: null,
+        userId: null, // Service vehicle, not linked to user
       },
     }),
   ]);

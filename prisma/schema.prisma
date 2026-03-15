@@ -40,6 +40,7 @@ model User {
 
   // Relations
   resident     Resident?
+  vehicles     Vehicle[]       // Vehicles owned by this user
   activityLogs ActivityLog[]
   accessRecordsAccess AccessRecord[]    @relation("AccessOperator")
   violations Violation[]       @relation("ViolationRecorder")
@@ -124,11 +125,13 @@ model Vehicle {
   category     VehicleCategory @default(WARGA)
   status       VehicleStatus   @default(ACTIVE)
   houseId      String?
+  userId       String?         // Owner of the vehicle (for WARGA)
   registeredAt DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
 
   // Relations
   house        House?          @relation(fields: [houseId], references: [id], onDelete: SetNull)
+  user         User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
   accessRecords AccessRecord[]
   violations   Violation[]
   blacklist    Blacklist?
